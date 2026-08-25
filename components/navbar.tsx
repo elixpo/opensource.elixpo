@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -47,25 +48,51 @@ export function Navbar() {
 
   const notifRef = useRef<HTMLDivElement>(null);
   const avatarRef = useRef<HTMLDivElement>(null);
+  const [user, setUser] = useState<{
+    userId: string;
+    displayName: string;
+    email: string;
+    avatar?: string;
+  } | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme');
     if (storedTheme) {
       setTheme(storedTheme);
     }
-    const loggedInStatus = localStorage.getItem('isLoggedIn');
-    setIsLoggedIn(loggedInStatus === 'true');
+
+    // Fetch real session
+    fetch('/api/auth/me')
+      .then((res) => {
+        if (res.ok) {
+          return res.json() as Promise<{
+            userId: string;
+            displayName: string;
+            email: string;
+            avatar?: string;
+          }>;
+        }
+        throw new Error('Not logged in');
+      })
+      .then((data) => {
+        setUser(data);
+        setIsLoggedIn(true);
+      })
+      .catch(() => {
+        setUser(null);
+        setIsLoggedIn(false);
+      })
+      .finally(() => {
+        setIsLoadingAuth(false);
+      });
   }, []);
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
-
-    console.log(
-      `Theme preference (${newTheme}) successfully saved to Ayushman's profile settings.`,
-    );
 
     if (newTheme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -74,10 +101,11 @@ export function Navbar() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.setItem('isLoggedIn', 'false');
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    setUser(null);
+    setIsLoggedIn(false);
     setAvatarMenuOpen(false);
-    console.log('Logged out successfully.');
     router.push('/');
   };
 
@@ -176,7 +204,7 @@ export function Navbar() {
             )}
           </button>
 
-          {isLoggedIn ? (
+          {!isLoadingAuth && isLoggedIn && user ? (
             <>
               <div className="relative" ref={notifRef}>
                 <button
@@ -252,26 +280,36 @@ export function Navbar() {
                 <button
                   type="button"
                   onClick={() => setAvatarMenuOpen(!avatarMenuOpen)}
-                  className="grid h-8 w-8 place-items-center rounded-full bg-accent text-xs font-black text-white no-underline hover:bg-accent-deep transition"
-                  title="Ayushman Profile"
+                  className="grid h-8 w-8 place-items-center rounded-full bg-accent text-xs font-black text-white no-underline hover:bg-accent-deep transition overflow-hidden"
+                  title={`${user.displayName} Profile`}
                 >
-                  AY
+                  {user.avatar ? (
+                    <Image
+                      src={user.avatar}
+                      alt={user.displayName}
+                      width={32}
+                      height={32}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    user.displayName.substring(0, 2).toUpperCase()
+                  )}
                 </button>
 
                 {avatarMenuOpen && (
                   <div className="absolute right-0 top-full z-50 mt-1 w-56 rounded-xl border border-[var(--line)] bg-white p-2 shadow-xl dark:border-neutral-800 dark:bg-neutral-950 animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="px-3 py-2 text-left">
                       <div className="text-sm font-extrabold text-ink dark:text-neutral-200">
-                        Ayushman
+                        {user.displayName}
                       </div>
                       <div className="text-xs text-[#777] dark:text-neutral-400">
-                        @ayushman
+                        {user.email}
                       </div>
                     </div>
                     <div className="my-1 border-t border-[var(--line)] dark:border-neutral-800" />
                     <div className="flex flex-col gap-0.5">
                       <Link
-                        href="/u/ayushman"
+                        href={`/u/${user.userId}`}
                         className="flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold text-ink dark:text-neutral-300 no-underline hover:bg-[#f6f6f6] dark:hover:bg-neutral-900 transition"
                       >
                         <svg
@@ -377,7 +415,7 @@ export function Navbar() {
                 )}
               </div>
             </>
-          ) : (
+          ) : !isLoadingAuth ? (
             <>
               <Link
                 href="/login"
@@ -392,7 +430,7 @@ export function Navbar() {
                 Join Now
               </Link>
             </>
-          )}
+          ) : null}
         </div>
 
         <div className="flex items-center gap-1.5 xl:hidden">
@@ -433,7 +471,7 @@ export function Navbar() {
             )}
           </button>
 
-          {isLoggedIn ? (
+          {!isLoadingAuth && isLoggedIn && user ? (
             <Link
               href="/notifications"
               className="rounded-lg p-2 text-[#555] hover:bg-[#f6f6f6] hover:text-ink dark:text-neutral-400 dark:hover:bg-neutral-900 dark:hover:text-white transition relative"
@@ -514,10 +552,10 @@ export function Navbar() {
 
             <div className="my-2 border-t border-[var(--line)] dark:border-neutral-800" />
 
-            {isLoggedIn ? (
+            {isLoadingAuth ? null : isLoggedIn && user ? (
               <div className="flex flex-col gap-1.5">
                 <Link
-                  href="/u/ayushman"
+                  href={`/u/${user.userId}`}
                   className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-base no-underline text-[#555] dark:text-neutral-400 hover:bg-[#f6f6f6] dark:hover:bg-neutral-900"
                 >
                   <svg
