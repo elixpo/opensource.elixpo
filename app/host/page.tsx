@@ -18,7 +18,7 @@ export default async function HostPage() {
     redirect('/login');
   }
   const { user } = authResult;
-  
+
   const contests = await getHostContests(user.userId);
 
   return (
@@ -117,7 +117,8 @@ export default async function HostPage() {
                     {contest.name}
                   </p>
                   <p className="mt-1 text-xs text-[#888] dark:text-neutral-400">
-                    {new Date(contest.startsAt).toLocaleDateString()} — {new Date(contest.endsAt).toLocaleDateString()}
+                    {new Date(contest.startsAt).toLocaleDateString()} —{' '}
+                    {new Date(contest.endsAt).toLocaleDateString()}
                   </p>
                 </div>
                 <div>

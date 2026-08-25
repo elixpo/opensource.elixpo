@@ -1,7 +1,11 @@
 'use server';
 
 import { requireAuth } from '@/lib/auth/middleware';
-import { type Discussion, type DiscussionVisibility, createDiscussion } from '@/lib/data/discussions';
+import {
+  createDiscussion,
+  type Discussion,
+  type DiscussionVisibility,
+} from '@/lib/data/discussions';
 
 export async function submitDiscussionAction(
   title: string,

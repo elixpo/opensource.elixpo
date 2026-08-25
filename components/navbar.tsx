@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -47,7 +48,10 @@ export function Navbar() {
 
   const notifRef = useRef<HTMLDivElement>(null);
   const avatarRef = useRef<HTMLDivElement>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<{
+    displayName: string;
+    avatar?: string;
+  } | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
@@ -273,9 +277,11 @@ export function Navbar() {
                   title={`${user.displayName} Profile`}
                 >
                   {user.avatar ? (
-                    <img
+                    <Image
                       src={user.avatar}
                       alt={user.displayName}
+                      width={32}
+                      height={32}
                       className="h-full w-full object-cover"
                     />
                   ) : (

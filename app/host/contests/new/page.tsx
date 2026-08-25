@@ -127,7 +127,12 @@ export default async function NewContestPage() {
                 </span>
               </label>
               <label className="flex cursor-pointer gap-3 rounded-xl border border-[var(--line)] bg-white dark:bg-neutral-950/40 p-4">
-                <input type="radio" name="scope" value="organization" className="accent-[#e53935]" />
+                <input
+                  type="radio"
+                  name="scope"
+                  value="organization"
+                  className="accent-[#e53935]"
+                />
                 <span>
                   <b className="block text-sm text-ink dark:text-neutral-100">
                     Complete organization

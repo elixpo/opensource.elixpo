@@ -29,7 +29,7 @@ export async function submitNewContest(formData: FormData) {
   const repositoryMode = scope === 'organization' ? 'organization' : 'selected';
 
   // Create the contest
-  const slug = await createContest(
+  await createContest(
     {
       name,
       startsAt,

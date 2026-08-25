@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/Dialog';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
-import { type Discussion, type ContestOption } from '@/lib/data/discussions';
+import type { ContestOption, Discussion } from '@/lib/data/discussions';
 import { submitDiscussionAction } from './actions';
 
 const visibilityOptions = [
@@ -28,7 +28,8 @@ export function DiscussionClient({
   initialDiscussions: Discussion[];
   contestOptions: ContestOption[];
 }) {
-  const [discussions, setDiscussions] = useState<Discussion[]>(initialDiscussions);
+  const [discussions, setDiscussions] =
+    useState<Discussion[]>(initialDiscussions);
   const [search, setSearch] = useState('');
   const [projectFilter, setProjectFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
@@ -66,7 +67,7 @@ export function DiscussionClient({
 
   async function handleCreateDiscussion() {
     if (!newTitle.trim() || !newBody.trim() || !newProject) return;
-    
+
     setIsSubmitting(true);
     setError(null);
 
@@ -79,7 +80,7 @@ export function DiscussionClient({
           .split(',')
           .map((t) => t.trim())
           .filter(Boolean),
-        newVisibility
+        newVisibility,
       );
 
       setDiscussions((prev) => [newDiscussion, ...prev]);
@@ -88,8 +89,10 @@ export function DiscussionClient({
       setNewTags('');
       setNewVisibility('public');
       setDialogOpen(false);
-    } catch (err: any) {
-      setError(err.message || 'Failed to create discussion');
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : 'Failed to create discussion';
+      setError(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -129,10 +132,7 @@ export function DiscussionClient({
                 </option>
               ))}
             </Select>
-            <Select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-            >
+            <Select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
               <option value="newest">Newest</option>
               <option value="active">Most Active</option>
             </Select>
@@ -202,7 +202,11 @@ export function DiscussionClient({
                     <div className="flex items-center gap-1.5">
                       <div className="w-5 h-5 rounded-full bg-accent text-white flex items-center justify-center text-[9px] font-bold">
                         {discussion.author.avatar ? (
-                          <img src={discussion.author.avatar} alt={discussion.author.name} className="w-full h-full rounded-full object-cover" />
+                          <span className="w-full h-full rounded-full flex items-center justify-center">
+                            {discussion.author.avatar
+                              .substring(0, 2)
+                              .toUpperCase()}
+                          </span>
                         ) : (
                           discussion.author.name.substring(0, 2).toUpperCase()
                         )}
@@ -266,10 +270,14 @@ export function DiscussionClient({
         <div className="grid gap-4 py-4">
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <div className="grid gap-2">
-            <label className="text-xs font-bold text-ink dark:text-neutral-300">
+            <label
+              htmlFor="disc-title"
+              className="text-xs font-bold text-ink dark:text-neutral-300"
+            >
               Title
             </label>
             <Input
+              id="disc-title"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
               placeholder="What's on your mind?"
@@ -277,10 +285,14 @@ export function DiscussionClient({
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <label className="text-xs font-bold text-ink dark:text-neutral-300">
+              <label
+                htmlFor="disc-project"
+                className="text-xs font-bold text-ink dark:text-neutral-300"
+              >
                 Project / Contest
               </label>
               <Select
+                id="disc-project"
                 value={newProject}
                 onChange={(e) => setNewProject(e.target.value)}
               >
@@ -292,10 +304,14 @@ export function DiscussionClient({
               </Select>
             </div>
             <div className="grid gap-2">
-              <label className="text-xs font-bold text-ink dark:text-neutral-300">
+              <label
+                htmlFor="disc-visibility"
+                className="text-xs font-bold text-ink dark:text-neutral-300"
+              >
                 Visibility
               </label>
               <Select
+                id="disc-visibility"
                 value={newVisibility}
                 onChange={(e) => setNewVisibility(e.target.value)}
               >
@@ -308,20 +324,28 @@ export function DiscussionClient({
             </div>
           </div>
           <div className="grid gap-2">
-            <label className="text-xs font-bold text-ink dark:text-neutral-300">
+            <label
+              htmlFor="disc-tags"
+              className="text-xs font-bold text-ink dark:text-neutral-300"
+            >
               Tags (comma separated)
             </label>
             <Input
+              id="disc-tags"
               value={newTags}
               onChange={(e) => setNewTags(e.target.value)}
               placeholder="help, setup, ideas"
             />
           </div>
           <div className="grid gap-2">
-            <label className="text-xs font-bold text-ink dark:text-neutral-300">
+            <label
+              htmlFor="disc-body"
+              className="text-xs font-bold text-ink dark:text-neutral-300"
+            >
               Body
             </label>
             <textarea
+              id="disc-body"
               className="min-h-32 w-full resize-y rounded-xl border border-[var(--line)] bg-white dark:bg-neutral-950 px-4 py-3 text-sm font-normal text-ink dark:text-neutral-100 outline-none focus:border-accent"
               placeholder="Provide more details here..."
               value={newBody}
@@ -333,7 +357,11 @@ export function DiscussionClient({
           <Button variant="secondary" onClick={() => setDialogOpen(false)}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleCreateDiscussion} disabled={isSubmitting}>
+          <Button
+            variant="primary"
+            onClick={handleCreateDiscussion}
+            disabled={isSubmitting}
+          >
             {isSubmitting ? 'Posting...' : 'Post Discussion'}
           </Button>
         </DialogFooter>

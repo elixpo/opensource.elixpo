@@ -1,7 +1,10 @@
 import { getDatabase } from '@/lib/cloudflare';
 
 export type DiscussionStatus = 'Open' | 'Resolved' | 'Pinned';
-export type DiscussionVisibility = 'public' | 'contributors' | 'project_members';
+export type DiscussionVisibility =
+  | 'public'
+  | 'contributors'
+  | 'project_members';
 
 export interface Discussion {
   id: string;
@@ -25,6 +28,21 @@ export interface ContestOption {
   label: string;
 }
 
+interface DiscussionRow {
+  id: string;
+  title: string;
+  body: string;
+  tags: string;
+  status: string;
+  visibility: string;
+  created_at: string;
+  updated_at: string;
+  project: string;
+  author_name: string;
+  author_avatar: string | null;
+  commentCount: number;
+}
+
 function generateId(prefix: string): string {
   return `${prefix}_${crypto.randomUUID().replace(/-/g, '')}`;
 }
@@ -35,7 +53,9 @@ function generateId(prefix: string): string {
 export async function getContestOptions(): Promise<ContestOption[]> {
   const db = await getDatabase();
   const { results } = await db
-    .prepare(`SELECT slug as value, name as label FROM contests ORDER BY created_at DESC`)
+    .prepare(
+      `SELECT slug as value, name as label FROM contests ORDER BY created_at DESC`,
+    )
     .all<{ value: string; label: string }>();
   return results;
 }
@@ -43,14 +63,16 @@ export async function getContestOptions(): Promise<ContestOption[]> {
 /**
  * Gets discussions. Evaluates visibility based on the requesting user's roles.
  */
-export async function getDiscussions(userId: string | null): Promise<Discussion[]> {
+export async function getDiscussions(
+  userId: string | null,
+): Promise<Discussion[]> {
   const db = await getDatabase();
-  
+
   // To handle visibility cleanly in SQL:
   // 1. Public discussions are always visible.
   // 2. 'contributors' discussions are visible if user has ANY active role in the contest.
   // 3. 'project_members' discussions are visible if user has a privileged role (host_owner, host_admin, project_admin).
-  
+
   const query = `
     SELECT 
       d.id, d.title, d.body, d.tags, d.status, d.visibility, d.created_at, d.updated_at,
@@ -62,7 +84,9 @@ export async function getDiscussions(userId: string | null): Promise<Discussion[
     JOIN users u ON d.author_user_id = u.id
     WHERE 
       d.visibility = 'public'
-      ${userId ? `
+      ${
+        userId
+          ? `
       OR (
         d.visibility = 'contributors' AND EXISTS (
           SELECT 1 FROM contest_memberships cm 
@@ -76,15 +100,17 @@ export async function getDiscussions(userId: string | null): Promise<Discussion[
           AND cm.role IN ('host_owner', 'host_admin', 'project_admin')
         )
       )
-      ` : ''}
+      `
+          : ''
+      }
     ORDER BY d.created_at DESC
   `;
 
-  let result;
+  let result: D1Result<DiscussionRow>;
   if (userId) {
-    result = await db.prepare(query).bind(userId, userId).all<any>();
+    result = await db.prepare(query).bind(userId, userId).all<DiscussionRow>();
   } else {
-    result = await db.prepare(query).all<any>();
+    result = await db.prepare(query).all<DiscussionRow>();
   }
 
   return result.results.map((r) => ({
@@ -113,9 +139,12 @@ export interface CreateDiscussionData {
   visibility: DiscussionVisibility;
 }
 
-export async function createDiscussion(data: CreateDiscussionData, userId: string): Promise<Discussion> {
+export async function createDiscussion(
+  data: CreateDiscussionData,
+  userId: string,
+): Promise<Discussion> {
   const db = await getDatabase();
-  
+
   // Resolve contest slug to ID
   const contest = await db
     .prepare('SELECT id FROM contests WHERE slug = ? LIMIT 1')
@@ -131,22 +160,29 @@ export async function createDiscussion(data: CreateDiscussionData, userId: strin
   // For now, we assume frontend UI limits their options, but backend should ideally verify.
 
   const id = generateId('dsc');
-  
-  await db.prepare(`
+
+  await db
+    .prepare(`
     INSERT INTO discussions (id, title, body, author_user_id, contest_id, visibility, tags)
     VALUES (?, ?, ?, ?, ?, ?, ?)
-  `).bind(
-    id,
-    data.title,
-    data.body,
-    userId,
-    contest.id,
-    data.visibility,
-    JSON.stringify(data.tags)
-  ).run();
+  `)
+    .bind(
+      id,
+      data.title,
+      data.body,
+      userId,
+      contest.id,
+      data.visibility,
+      JSON.stringify(data.tags),
+    )
+    .run();
 
   // Return a fetched discussion so we have author names populated
   // Since we just inserted it, we know the user can see it.
   const discussions = await getDiscussions(userId);
-  return discussions.find(d => d.id === id)!;
+  const found = discussions.find((d) => d.id === id);
+  if (!found) {
+    throw new Error('Failed to retrieve created discussion.');
+  }
+  return found;
 }

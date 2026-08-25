@@ -6,7 +6,7 @@ export async function subscribeToContest(userId: string, contestId: string) {
     .prepare(
       `INSERT INTO contest_subscribers (contest_id, user_id)
        VALUES (?, ?)
-       ON CONFLICT DO NOTHING`
+       ON CONFLICT DO NOTHING`,
     )
     .bind(contestId, userId)
     .run();
@@ -16,7 +16,7 @@ export async function sendContestAnnouncement(
   userId: string,
   contestId: string,
   subject: string,
-  markdownBody: string
+  markdownBody: string,
 ) {
   const db = await getDatabase();
 
@@ -25,17 +25,19 @@ export async function sendContestAnnouncement(
     .prepare(
       `SELECT role FROM contest_memberships
        WHERE contest_id = ? AND user_id = ? AND status = 'active'
-       LIMIT 1`
+       LIMIT 1`,
     )
     .bind(contestId, userId)
     .first<{ role: string }>();
 
   if (!membership || !['host_owner', 'host_admin'].includes(membership.role)) {
-    throw new Error('You do not have permission to send announcements for this contest.');
+    throw new Error(
+      'You do not have permission to send announcements for this contest.',
+    );
   }
 
   const env = await getCloudflareBindings();
-  
+
   if (!env.EMAIL_OUTBOUND_QUEUE) {
     throw new Error('Email outbound queue is not configured.');
   }

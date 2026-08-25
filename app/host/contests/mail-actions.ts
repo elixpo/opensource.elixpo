@@ -6,7 +6,7 @@ import { sendContestAnnouncement, subscribeToContest } from '@/lib/data/mail';
 export async function sendAnnouncementAction(
   contestId: string,
   subject: string,
-  markdownBody: string
+  markdownBody: string,
 ) {
   const authResult = await requireAuth();
   if (authResult.error) {
@@ -17,7 +17,12 @@ export async function sendAnnouncementAction(
     throw new Error('All fields are required.');
   }
 
-  await sendContestAnnouncement(authResult.user.userId, contestId, subject, markdownBody);
+  await sendContestAnnouncement(
+    authResult.user.userId,
+    contestId,
+    subject,
+    markdownBody,
+  );
 }
 
 export async function subscribeToUpdatesAction(contestId: string) {
