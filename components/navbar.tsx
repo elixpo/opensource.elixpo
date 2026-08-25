@@ -49,7 +49,9 @@ export function Navbar() {
   const notifRef = useRef<HTMLDivElement>(null);
   const avatarRef = useRef<HTMLDivElement>(null);
   const [user, setUser] = useState<{
+    userId: string;
     displayName: string;
+    email: string;
     avatar?: string;
   } | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -65,7 +67,12 @@ export function Navbar() {
     fetch('/api/auth/me')
       .then((res) => {
         if (res.ok) {
-          return res.json();
+          return res.json() as Promise<{
+            userId: string;
+            displayName: string;
+            email: string;
+            avatar?: string;
+          }>;
         }
         throw new Error('Not logged in');
       })
