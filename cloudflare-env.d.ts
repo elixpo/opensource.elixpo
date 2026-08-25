@@ -7,6 +7,7 @@ interface __BaseEnv_CloudflareEnv {
   RATE_LIMITS: KVNamespace;
   DB: D1Database;
   ASSETS: Fetcher;
+  EMAIL_OUTBOUND_QUEUE: Queue;
   NEXT_PUBLIC_APP_URL: 'https://opensource.elixpo.com';
   NEXT_PUBLIC_ACCOUNTS_URL: 'https://accounts.elixpo.com';
   NEXT_PUBLIC_GITHUB_REPOSITORY: 'https://github.com/elixpo/opensource';

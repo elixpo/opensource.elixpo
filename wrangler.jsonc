@@ -51,5 +51,13 @@
       "id": "00000000000000000000000000000000",
       "preview_id": "00000000000000000000000000000000"
     }
-  ]
+  ],
+  "queues": {
+    "producers": [
+      {
+        "binding": "EMAIL_OUTBOUND_QUEUE",
+        "queue": "elixpo-email-outbound"
+      }
+    ]
+  }
 }
