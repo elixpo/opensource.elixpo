@@ -1,5 +1,8 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { Check } from '@/components/icons';
+import { requireAuth } from '@/lib/auth/middleware';
+import { submitNewContest } from '../actions';
 
 const roleOptions = [
   [
@@ -24,7 +27,12 @@ const roleOptions = [
   ],
 ];
 
-export default function NewContestPage() {
+export default async function NewContestPage() {
+  const authResult = await requireAuth();
+  if (authResult.error) {
+    redirect('/login');
+  }
+
   return (
     <main>
       <header className="flex min-h-[62px] items-center border-b border-[var(--line)] bg-white dark:bg-neutral-900 px-5 md:px-8">
@@ -48,7 +56,7 @@ export default function NewContestPage() {
           Start with the contest identity, schedule, GitHub scope, and team
           structure. Rules and invitations can be refined before launch.
         </p>
-        <form className="mt-10 space-y-6">
+        <form action={submitNewContest} className="mt-10 space-y-6">
           <fieldset className="surface p-6 md:p-8">
             <legend className="px-2 text-sm font-extrabold text-ink dark:text-neutral-100">
               01 · Contest details
@@ -57,14 +65,18 @@ export default function NewContestPage() {
               <label className="text-xs font-bold text-[#555] dark:text-neutral-300 md:col-span-2">
                 Contest name
                 <input
+                  name="name"
                   className="mt-2 w-full rounded-xl border border-[var(--line)] bg-white dark:bg-neutral-950 px-4 py-3 text-sm font-normal text-ink dark:text-neutral-100 outline-none focus:border-accent"
                   placeholder="OpenCode Summer 2026"
+                  required
                 />
               </label>
               <label className="text-xs font-bold text-[#555] dark:text-neutral-300">
                 Starts on
                 <input
                   type="date"
+                  name="startsAt"
+                  required
                   className="mt-2 w-full rounded-xl border border-[var(--line)] bg-white dark:bg-neutral-950 px-4 py-3 text-sm font-normal text-ink dark:text-neutral-100 outline-none focus:border-accent"
                 />
               </label>
@@ -72,12 +84,16 @@ export default function NewContestPage() {
                 Ends on
                 <input
                   type="date"
+                  name="endsAt"
+                  required
                   className="mt-2 w-full rounded-xl border border-[var(--line)] bg-white dark:bg-neutral-950 px-4 py-3 text-sm font-normal text-ink dark:text-neutral-100 outline-none focus:border-accent"
                 />
               </label>
               <label className="text-xs font-bold text-[#555] dark:text-neutral-300 md:col-span-2">
                 Public summary
                 <textarea
+                  name="summary"
+                  required
                   className="mt-2 min-h-28 w-full resize-y rounded-xl border border-[var(--line)] bg-white dark:bg-neutral-950 px-4 py-3 text-sm font-normal text-ink dark:text-neutral-100 outline-none focus:border-accent"
                   placeholder="What contributors will build and why it matters."
                 />
@@ -97,6 +113,7 @@ export default function NewContestPage() {
                 <input
                   type="radio"
                   name="scope"
+                  value="selected"
                   defaultChecked
                   className="accent-[#e53935]"
                 />
@@ -110,7 +127,7 @@ export default function NewContestPage() {
                 </span>
               </label>
               <label className="flex cursor-pointer gap-3 rounded-xl border border-[var(--line)] bg-white dark:bg-neutral-950/40 p-4">
-                <input type="radio" name="scope" className="accent-[#e53935]" />
+                <input type="radio" name="scope" value="organization" className="accent-[#e53935]" />
                 <span>
                   <b className="block text-sm text-ink dark:text-neutral-100">
                     Complete organization
@@ -153,7 +170,7 @@ export default function NewContestPage() {
               Save as draft
             </Link>
             <button
-              type="button"
+              type="submit"
               className="button-primary !bg-accent hover:!bg-accent-deep"
             >
               Continue to rules →

@@ -1,5 +1,8 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { Arrow, Chart, GitBranch, Trophy, Users } from '@/components/icons';
+import { requireAuth } from '@/lib/auth/middleware';
+import { getHostContests } from '@/lib/data/contests';
 
 const roles = [
   ['Hosts', '3', 'Owner + co-hosts'],
@@ -9,24 +12,15 @@ const roles = [
   ['Contributors', '248', '61 joined this week'],
 ];
 
-const contests = [
-  {
-    name: 'OpenCode Summer 2026',
-    dates: 'Aug 01 — Sep 30',
-    status: 'Active',
-    progress: 42,
-    people: 315,
-  },
-  {
-    name: 'Winter Maintainers Sprint',
-    dates: 'Nov 15 — Dec 20',
-    status: 'Draft',
-    progress: 8,
-    people: 16,
-  },
-];
+export default async function HostPage() {
+  const authResult = await requireAuth();
+  if (authResult.error) {
+    redirect('/login');
+  }
+  const { user } = authResult;
+  
+  const contests = await getHostContests(user.userId);
 
-export default function HostPage() {
   return (
     <main>
       <header className="flex min-h-[62px] items-center justify-between border-b border-[var(--line)] bg-white dark:bg-neutral-900 px-5 md:px-8">
@@ -35,7 +29,7 @@ export default function HostPage() {
             Host panel
           </p>
           <p className="text-sm font-bold text-ink dark:text-neutral-100">
-            Good morning, Ayushman
+            Good morning, {user.displayName.split(' ')[0]}
           </p>
         </div>
         <div className="flex gap-2">
@@ -123,7 +117,7 @@ export default function HostPage() {
                     {contest.name}
                   </p>
                   <p className="mt-1 text-xs text-[#888] dark:text-neutral-400">
-                    {contest.dates}
+                    {new Date(contest.startsAt).toLocaleDateString()} — {new Date(contest.endsAt).toLocaleDateString()}
                   </p>
                 </div>
                 <div>
@@ -146,7 +140,7 @@ export default function HostPage() {
                   </p>
                 </div>
                 <span
-                  className={`w-fit rounded-full px-2.5 py-1 text-[10px] font-bold ${contest.status === 'Active' ? 'bg-[#effaf2] dark:bg-emerald-950/40 text-[#287d3c] dark:text-emerald-400' : 'bg-[#f1f1f1] dark:bg-neutral-800 text-[#777] dark:text-neutral-400'}`}
+                  className={`w-fit rounded-full px-2.5 py-1 text-[10px] font-bold ${contest.status === 'active' ? 'bg-[#effaf2] dark:bg-emerald-950/40 text-[#287d3c] dark:text-emerald-400' : 'bg-[#f1f1f1] dark:bg-neutral-800 text-[#777] dark:text-neutral-400'}`}
                 >
                   {contest.status}
                 </span>
