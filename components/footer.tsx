@@ -21,7 +21,6 @@ const footerSections: FooterSection[] = [
       { name: 'Features', href: '/#platform' },
       { name: 'Workflow', href: '/#workflow' },
       { name: 'Host Panel', href: '/host' },
-      { name: 'Home', href: '/' },
     ],
   },
   {
@@ -29,18 +28,12 @@ const footerSections: FooterSection[] = [
     title: 'Resources',
     links: [
       {
-        name: 'Discussions',
-        href: 'https://github.com/orgs/elixpo/discussions',
-        external: true,
-      },
-      {
         name: 'Source Code',
         href: 'https://github.com/elixpo/opensource',
         external: true,
       },
       { name: 'License', href: '/LICENSE' },
       { name: 'FAQ', href: '/faq' },
-      { name: 'Code of Conduct', href: '/code-of-conduct' },
     ],
   },
   {
@@ -63,15 +56,9 @@ const footerSections: FooterSection[] = [
     links: [
       { name: 'About Us', href: '/about' },
       { name: 'Timeline', href: '/timeline' },
-      { name: 'Main Site', href: 'https://elixpo.com', external: true },
       {
-        name: 'Contact Email',
+        name: 'Contact Us',
         href: 'mailto:hello@elixpo.com',
-        external: true,
-      },
-      {
-        name: 'Security Policies',
-        href: 'https://github.com/elixpo/opensource/security/policy',
         external: true,
       },
     ],
