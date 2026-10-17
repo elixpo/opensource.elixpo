@@ -45,7 +45,7 @@ const footerSections: FooterSection[] = [
         href: 'https://discord.gg/elixpo',
         external: true,
       },
-      { name: 'Sponsors', href: '/sponsors' },
+      { name: 'Funding policy', href: '/sponsors' },
       { name: 'Events', href: '/events' },
       { name: 'Discussion Hub', href: '/discussion' },
     ],
