@@ -47,10 +47,16 @@ export default function Sponsors() {
             </div>
 
             <div className="mt-12 flex flex-wrap gap-3">
-              <a href="https://elixpo.com/partnerships" className="button-primary">
+              <a
+                href="https://elixpo.com/partnerships"
+                className="button-primary"
+              >
                 Read the partnership policy
               </a>
-              <a href="https://github.com/elixpo/elixpo/blob/main/docs/policies/sponsorship.md" className="button-secondary">
+              <a
+                href="https://github.com/elixpo/elixpo/blob/main/docs/policies/sponsorship.md"
+                className="button-secondary"
+              >
                 Review the controlling record
               </a>
             </div>
