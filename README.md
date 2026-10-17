@@ -10,8 +10,7 @@
   <a href="https://opensource.elixpo.com">opensource.elixpo.com</a> ·
   <a href="https://elixpo.com">Elixpo</a> ·
   <a href="https://github.com/orgs/elixpo/discussions">Discussions</a> ·
-  <a href="https://github.com/elixpo/opensource/issues">Issues</a> ·
-  <a href="https://github.com/sponsors/Circuit-Overtime">Sponsor</a>
+  <a href="https://github.com/elixpo/opensource/issues">Issues</a>
 </p>
 
 <p align="center">
@@ -220,7 +219,6 @@ and **OSCI**.
 - 💬 Join the conversation in [GitHub Discussions](https://github.com/orgs/elixpo/discussions).
 - 🛠️ Pick a scoped task from the [issue tracker](https://github.com/elixpo/opensource/issues).
 - 🧭 Help shape the platform through product and architecture proposals.
-- ❤️ Support Elixpo through [GitHub Sponsors](https://github.com/sponsors/Circuit-Overtime).
 
 ## Brand assets
 
