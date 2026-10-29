@@ -18,7 +18,7 @@
   <img src="https://img.shields.io/badge/platform-Cloudflare%20Workers-f38020?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare Workers" />
   <img src="https://img.shields.io/badge/database-Cloudflare%20D1-f38020?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare D1" />
   <img src="https://img.shields.io/badge/framework-Next.js%2015-000?style=flat-square&logo=next.js" alt="Next.js 15" />
-  <img src="https://img.shields.io/github/license/elixpo/opensource?style=flat-square&color=444" alt="License" />
+  <img src="https://img.shields.io/github/license/elixpo/opensource.elixpo?style=flat-square&color=444" alt="License" />
   <img src="https://img.shields.io/github/stars/elixpo/opensource?style=flat-square&color=e53935" alt="Stars" />
 </p>
 
@@ -229,13 +229,12 @@ with a browsable kit at **[elixpo.com/assets](https://elixpo.com/assets)**.
 
 ## License
 
-Elixpo uses one licensing standard across every repository:
+- **Code** — [MIT](LICENSE).
+- **Brand and visual assets** — [CC-BY-4.0](LICENSES/preferred/CC-BY-4.0).
 
-- **Code** — [MIT](LICENSES/preferred/MIT) with the [Oreo-trademarks exception](LICENSES/exceptions/Oreo-trademarks).
-- **Brand and visual assets** — [CC-BY-4.0](LICENSES/preferred/CC-BY-4.0) with the same exception.
-
-The Oreo mascot, chest E-badge, Elixpo and Oreo names, official domains, and
-brand palette remain reserved. See [`LICENSE`](LICENSE) and the product-specific
+The Elixpo and Oreo names, the Oreo mascot, the E-badge mark, and the
+elixpo.com domains are trademarks of the Elixpo project and are not licensed by
+MIT or CC-BY-4.0. See [`TRADEMARKS.md`](TRADEMARKS.md) and the product-specific
 [`NOTICE`](LICENSES/NOTICE).
 
 ## Exclusive
