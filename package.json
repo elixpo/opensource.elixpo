@@ -24,6 +24,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
+    "test": "node --test tests/repository.test.mjs",
     "cf:build": "CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false opennextjs-cloudflare build",
     "cf:preview": "CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false opennextjs-cloudflare build && CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false opennextjs-cloudflare preview",
     "cf:deploy": "CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false opennextjs-cloudflare build && CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false opennextjs-cloudflare deploy",
@@ -53,7 +54,7 @@
     "postcss": "8.5.25",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.0",
-    "wrangler": "latest"
+    "wrangler": "4.118.0"
   },
   "engines": {
     "node": ">=20.0.0"

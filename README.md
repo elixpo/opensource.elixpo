@@ -69,19 +69,51 @@ The platform is under active development. The current foundation includes:
 - Cloudflare Workers deployment through the OpenNext adapter.
 - D1 schema and migrations for contests, memberships, repositories, activity, points, invitations, webhooks, and audits.
 - KV bindings for disposable cache data and best-effort rate limiting.
-- SOPS and age-based encrypted environment management.
+- SOPS and age-based encrypted environment management for maintainers.
 
 Identity integration, GitHub App ingestion, complete role dashboards, and
 production workflows are being delivered incrementally. Follow the
 [issue tracker](https://github.com/elixpo/opensource/issues) for scoped work.
 
-## Running this project locally
+## Warm-up (no keys)
 
-Requirements: Node.js 20 or newer, npm, and SOPS for shared secret management.
+<!-- Commands match .github/workflows/biome.yml (./biome.sh ci), .github/workflows/tests.yml (npm test) and the Elixpo quality gate called from .github/workflows/elixpo-ci.yml (npm ci, then ci.test_cmd and ci.build_cmd from .elixpo/project.yml on Node 20). -->
+
+You need Node.js 20 (see [`.nvmrc`](.nvmrc)) and npm on Linux, macOS, or
+Windows via WSL. No Elixpo keys, accounts, SOPS or `.env.local` are needed.
 
 ```bash
-cp .env.example .env.local
-npm install
+npm ci
+./biome.sh ci
+npm test
+npm run build
+```
+
+**What works:** installing from the lockfile, lint and format checks, the unit
+tests and the production build. `npm run db:migrate:local` creates a local D1
+database from `workers/migrations/`, and `npm run dev` starts the frontend at
+[http://localhost:3000](http://localhost:3000) with mock UI data; encrypted
+values in the committed `.env` are ignored and public URLs fall back to the
+defaults in `lib/env.ts`. **What is skipped:** sign-in, GitHub App ingestion
+and anything else that needs a key. **Expected result:** every command exits
+with status 0. If something asks you for a secret, open an issue instead of
+working around it.
+
+## Configuration and access
+
+This repository keeps configuration encrypted with SOPS. Applicants do not need
+any keys: setup, tests and warm-up tasks run locally without decrypting
+configuration. Once accepted, contributors receive SOPS access scoped to their
+work (for example integration tests or staging), revoked when the programme
+ends. Do not try to decrypt or commit configuration; if setup asks for a
+secret, open an issue.
+
+## Running this project locally
+
+Requirements: Node.js 20 or newer and npm. No keys or SOPS are needed.
+
+```bash
+npm ci
 npm run db:migrate:local
 npm run dev
 ```
@@ -133,9 +165,11 @@ npm run db:migrate:remote
 Remote migrations run before the Worker deployment in the manually triggered,
 protected `Deploy Cloudflare Worker` GitHub Actions workflow.
 
-## Environment and SOPS
+## Environment and SOPS (maintainers)
 
-- `.env.example` documents expected application variables.
+Contributors can skip this section; see
+[Configuration and access](#configuration-and-access).
+
 - `.env.local` contains plaintext developer values and is ignored by Git.
 - `.env` is the committed SOPS-encrypted shared environment file.
 - `.sops.yaml` contains public age recipients; private keys never enter the repository.

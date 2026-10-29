@@ -38,7 +38,7 @@ license:
   trademark_policy: https://elixpo.com/terms
 ci:
   lint_cmd: ''
-  test_cmd: ''
+  test_cmd: npm test
   build_cmd: npm run build
 maintainers:
 - github: Circuit-Overtime
@@ -47,6 +47,12 @@ maintainers:
   - web application
   - GitHub
   lead: true
+- github: divyanshuj91
+  skills:
+  - TypeScript
+  - GitHub
+  - Test design
+  lead: false
 governance:
   model: maintainer-led
   document: GOVERNANCE.md
