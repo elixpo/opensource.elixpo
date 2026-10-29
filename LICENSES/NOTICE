@@ -1,42 +1,45 @@
-NOTICE - the Elixpo notice board
-================================
+NOTICE
+======
 
-This repository is licensed under the Elixpo License (see ../LICENSE). This
-NOTICE file is the "notice board": it records reservations and product-specific
-terms that sit ON TOP of the base license for this repository. Read it together
-with LICENSE and LICENSES/exceptions/Oreo-trademarks.
+The code in this repository is licensed under the MIT License (see
+`../LICENSE` and `preferred/MIT`). Visual assets are licensed under CC-BY-4.0
+(see `preferred/CC-BY-4.0`). Brand rules - names, mascot, logos, domains and
+official listings - are separate and documented in `../TRADEMARKS.md`.
+
+This notice adds no copyright restriction on top of those licences.
 
 REPOSITORY
 ----------
 
   Name:        Elixpo Open Source (opensource.elixpo.com)
-  What it is:  A multi-tenant platform for running open-source contests,
-               mentorship programs, campus initiatives, contribution tracking,
-               leaderboards, and rewards on Cloudflare Workers.
+  What it is:  A platform for running open-source contests, mentorship programs,
+               campus initiatives, contribution tracking, and leaderboards on
+               Cloudflare Workers.
 
-EXCLUSIVE ARTIFACTS IN THIS REPOSITORY
---------------------------------------
+OFFICIAL NAMES AND LISTINGS
+---------------------------
 
-  Hosted SaaS
-    opensource.elixpo.com is the official hosted Elixpo Open Source deployment.
-    The hosted service, its operational data, the "Elixpo Open Source" product
-    identity, and the official domain are reserved to Elixpo. The source code
-    remains MIT and may be reused; forks must operate under a different name
-    and domain and may not present themselves as the official Elixpo service.
+The following identify official Elixpo releases and are covered by
+`../TRADEMARKS.md`, not by an extra copyright term:
 
-  No separately-distributed artifact
-    This repository does not currently publish an npm package, marketplace
-    extension, or separately-licensed binary. Public application and API
-    surfaces at opensource.elixpo.com are served from this source but are not
-    separately-distributed artifacts.
+  - the "Elixpo Open Source" product name
+  - the official deployment at opensource.elixpo.com
 
-BRAND ASSETS
-------------
+Forks are welcome under MIT; please use your own product, package, listing
+and domain names and do not imply Elixpo endorsement.
 
-  Product logos, icons, social images, illustrations, and other official brand
-  assets under public/ are provided under CC-BY-4.0 WITH Oreo-trademarks. The
-  Oreo mascot, chest E-badge, Elixpo / Oreo names, official product identity,
-  domains, and palette remain reserved
-  (see LICENSES/exceptions/Oreo-trademarks).
+VISUAL ASSETS
+-------------
+
+  The brand and visual asset files listed in `README.md` (in this
+  directory) are CC-BY-4.0. Reusing them as files only
+  requires the attribution CC-BY-4.0 asks for; using the Elixpo or Oreo names
+  or mascot as your own branding is covered by `../TRADEMARKS.md`.
+
+THIRD-PARTY MATERIAL
+--------------------
+
+  Third-party components keep their own licences. See
+  `notices/notice-board` for the attribution list.
 
 Contact: hello@elixpo.com
