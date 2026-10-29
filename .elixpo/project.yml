@@ -47,6 +47,12 @@ maintainers:
   - web application
   - GitHub
   lead: true
+- github: divyanshuj91
+  skills:
+  - TypeScript
+  - GitHub
+  - Test design
+  lead: false
 governance:
   model: maintainer-led
   document: GOVERNANCE.md
