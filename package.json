@@ -4,7 +4,7 @@
   "private": true,
   "description": "The Elixpo platform for running open-source programs, competitions, mentorship, and rewards.",
   "author": "Elixpo <hello@elixpo.com> (https://elixpo.com)",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "homepage": "https://opensource.elixpo.com",
   "repository": {
     "type": "git",
