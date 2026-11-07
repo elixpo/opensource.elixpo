@@ -1,0 +1,27 @@
+# Deploys the opensource-elixpo Worker (OpenNext) through the shared Elixpo deploy workflow:
+# typecheck, OpenNext build, D1 migrations, then wrangler deploy. Runtime secrets stay as
+# configured on the Worker; .env is never loaded as dev vars during the build.
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - docs/**
+      - "**/*.md"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  worker:
+    uses: elixpo/agent.elixpo/.github/workflows/deploy-cloudflare-worker.yml@main
+    with:
+      node-version: "20"
+      pre-build-command: npm run typecheck
+      build-command: npm run cf:build
+      build-env: CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false
+      d1-database: opensource-elixpo
+    secrets: inherit
