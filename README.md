@@ -195,7 +195,7 @@ uploaded to Cloudflare separately.
 | 🔗 **lixrl** | The flagship Elixpo URL shortener | [lixrl.com](https://lixrl.com) |
 | 🧑‍💻 **Elixpo Open Source** | Open-source contest and program operations | [opensource.elixpo.com](https://opensource.elixpo.com) |
 | 🪪 **Portfolios** | Personal pages for showcasing work | [me.elixpo.com](https://me.elixpo.com) |
-| 🐼 **Oreo** | The mascot's home | [oreo.elixpo.com](https://oreo.elixpo.com) |
+| 🐼 **Falera** | The open conference badge and FaleraOS | [falera.elixpo.com](https://falera.elixpo.com) |
 
 ## Architecture
 
