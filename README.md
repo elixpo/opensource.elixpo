@@ -265,10 +265,10 @@ with a browsable kit at **[elixpo.com/assets](https://elixpo.com/assets)**.
 
 Elixpo uses one licensing standard across every repository:
 
-- **Code** — [MIT](LICENSES/preferred/MIT) with the [Oreo-trademarks exception](LICENSES/exceptions/Oreo-trademarks).
+- **Code** — [MIT](LICENSES/preferred/MIT) with the [Lumi-trademarks exception](LICENSES/exceptions/Lumi-trademarks).
 - **Brand and visual assets** — [CC-BY-4.0](LICENSES/preferred/CC-BY-4.0) with the same exception.
 
-The Oreo mascot, chest E-badge, Elixpo and Oreo names, official domains, and
+The Lumi mascot, chest E-badge, Elixpo and Lumi names, official domains, and
 brand palette remain reserved. See [`LICENSE`](LICENSE) and the product-specific
 [`NOTICE`](LICENSES/NOTICE).
 
