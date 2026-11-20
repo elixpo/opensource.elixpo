@@ -1,54 +1,40 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Footer } from '@/components/footer';
 import { Navbar } from '@/components/navbar';
+import { EmptyState } from '@/components/states/EmptyState';
+import { createPublicMetadata } from '@/lib/metadata';
+import { getPublicContributor } from '@/lib/public-data';
 
-export default async function UserProfile({
-  params,
-}: {
+type ProfilePageProps = {
   params: Promise<{ handle: string }>;
-}) {
+};
+
+export async function generateMetadata({
+  params,
+}: ProfilePageProps): Promise<Metadata> {
   const { handle } = await params;
+  const contributor = getPublicContributor(handle);
 
-  const isDemoUser = handle.toLowerCase() === 'ayushman';
+  if (!contributor) {
+    return createPublicMetadata({
+      title: 'Contributor profile not found',
+      description: 'This contributor does not have a public demo profile.',
+      path: `/u/${encodeURIComponent(handle)}`,
+      noIndex: true,
+    });
+  }
 
-  const user = isDemoUser
-    ? {
-        name: 'Ayushman',
-        handle: 'ayushman',
-        points: 2850,
-        prs: 34,
-        streak: 12,
-        badges: [
-          'Elite Contributor',
-          'Active Contributor',
-          'Edge Expert',
-          'Early Adopter',
-        ],
-        contributions: [
-          {
-            pr: '#284',
-            title:
-              'Configure Turbopack configurations for OpenNext build scripts',
-            repo: 'elixpo/opensource',
-            status: 'Merged',
-            points: 150,
-          },
-          {
-            pr: '#212',
-            title: 'Build Ambassador metrics charting panels',
-            repo: 'elixpo/opensource',
-            status: 'Merged',
-            points: 120,
-          },
-          {
-            pr: '#190',
-            title: 'Write D1 database replication seeds',
-            repo: 'elixpo/cli',
-            status: 'Merged',
-            points: 180,
-          },
-        ],
-      }
-    : null;
+  return createPublicMetadata({
+    title: `${contributor.name} — Contributor Profile`,
+    description: `View the public demo profile for @${contributor.handle}.`,
+    path: `/u/${contributor.handle}`,
+  });
+}
+
+export default async function UserProfile({ params }: ProfilePageProps) {
+  const { handle } = await params;
+  const contributor = getPublicContributor(handle);
 
   return (
     <main className="min-h-screen flex flex-col justify-between">
@@ -57,119 +43,74 @@ export default async function UserProfile({
         <section className="relative overflow-hidden py-16 md:py-24">
           <div className="hero-grid absolute inset-0 -z-10" />
           <div className="shell">
-            {user ? (
+            {contributor ? (
               <>
-                <div className="surface p-8 flex flex-col md:flex-row items-center gap-6">
-                  <div className="grid h-20 w-20 place-items-center rounded-full bg-accent text-3xl font-black text-white">
-                    {user.name.slice(0, 2).toUpperCase()}
+                <p className="eyebrow">Public contributor profile</p>
+                <div className="surface mt-5 flex flex-col items-center gap-6 p-8 md:flex-row">
+                  <div
+                    aria-hidden="true"
+                    className="grid h-20 w-20 place-items-center rounded-full bg-accent text-2xl font-black text-white"
+                  >
+                    {contributor.name
+                      .split(' ')
+                      .map((part) => part[0])
+                      .join('')
+                      .slice(0, 2)
+                      .toUpperCase()}
                   </div>
-                  <div className="text-center md:text-left flex-1">
+                  <div className="flex-1 text-center md:text-left">
                     <h1 className="text-3xl font-black text-ink dark:text-neutral-100">
-                      {user.name}
+                      {contributor.name}
                     </h1>
                     <p className="text-sm text-[#777] dark:text-neutral-400">
-                      @{user.handle}
+                      @{contributor.handle}
                     </p>
-                    <div className="mt-4 flex flex-wrap justify-center md:justify-start gap-2">
-                      {user.badges.map((b) => (
-                        <span
-                          key={b}
-                          className="rounded-full bg-[#f0f0f0] dark:bg-neutral-800 px-3 py-1 text-xs text-ink dark:text-neutral-300 font-semibold"
-                        >
-                          {b}
-                        </span>
-                      ))}
-                    </div>
+                    <span className="mt-4 inline-flex rounded-full bg-[#f0f0f0] px-3 py-1 text-xs font-semibold text-ink dark:bg-neutral-800 dark:text-neutral-300">
+                      {contributor.badge}
+                    </span>
                   </div>
-                  <div className="grid grid-cols-3 gap-6 border-t md:border-t-0 md:border-l border-[var(--line)] dark:border-neutral-800 pt-6 md:pt-0 md:pl-8 w-full md:w-auto text-center">
+                  <dl className="grid w-full grid-cols-3 gap-4 border-t border-[var(--line)] pt-5 text-center md:w-auto md:border-l md:border-t-0 md:pl-8 md:pt-0">
                     <div>
-                      <p className="text-3xl font-black text-accent">
-                        {user.points}
-                      </p>
-                      <p className="text-[10px] font-mono font-bold text-[#777] dark:text-neutral-400 uppercase">
+                      <dt className="text-[10px] font-mono font-bold uppercase text-[#777] dark:text-neutral-400">
                         Points
-                      </p>
+                      </dt>
+                      <dd className="mt-1 text-2xl font-black text-accent">
+                        {contributor.points}
+                      </dd>
                     </div>
                     <div>
-                      <p className="text-3xl font-black text-ink dark:text-neutral-100">
-                        {user.prs}
-                      </p>
-                      <p className="text-[10px] font-mono font-bold text-[#777] dark:text-neutral-400 uppercase">
-                        PRs Merged
-                      </p>
+                      <dt className="text-[10px] font-mono font-bold uppercase text-[#777] dark:text-neutral-400">
+                        Merged PRs
+                      </dt>
+                      <dd className="mt-1 text-2xl font-black text-ink dark:text-neutral-100">
+                        {contributor.mergedPullRequests}
+                      </dd>
                     </div>
                     <div>
-                      <p className="text-3xl font-black text-ink dark:text-neutral-100">
-                        {user.streak}d
-                      </p>
-                      <p className="text-[10px] font-mono font-bold text-[#777] dark:text-neutral-400 uppercase">
-                        Active Streak
-                      </p>
+                      <dt className="text-[10px] font-mono font-bold uppercase text-[#777] dark:text-neutral-400">
+                        Streak
+                      </dt>
+                      <dd className="mt-1 text-2xl font-black text-ink dark:text-neutral-100">
+                        {contributor.streak}d
+                      </dd>
                     </div>
-                  </div>
+                  </dl>
                 </div>
-
-                <div className="mt-8">
-                  <h2 className="text-xl font-bold text-ink dark:text-neutral-100 mb-4">
-                    Recent Merged Contributions
-                  </h2>
-                  <div className="flex flex-col gap-4">
-                    {user.contributions.map((c) => (
-                      <div
-                        key={c.pr}
-                        className="surface p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-                      >
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-xs font-bold text-accent">
-                              {c.repo}
-                            </span>
-                            <span className="rounded bg-green-100 dark:bg-emerald-950/40 px-2 py-0.5 text-[10px] font-bold text-green-800 dark:text-emerald-400">
-                              {c.status}
-                            </span>
-                          </div>
-                          <h3 className="mt-2 text-sm font-extrabold text-ink dark:text-neutral-100">
-                            {c.title}{' '}
-                            <span className="text-[#888] dark:text-neutral-400 font-medium">
-                              {c.pr}
-                            </span>
-                          </h3>
-                        </div>
-                        <div className="text-right">
-                          <span className="font-mono text-sm font-black text-accent">
-                            +{c.points} pts
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <p className="mt-4 text-xs text-[#777] dark:text-neutral-500">
+                  Public profile preview using demonstration content, not live
+                  contributor activity.
+                </p>
               </>
             ) : (
-              <div className="surface p-12 text-center max-w-xl mx-auto">
-                <div className="grid h-16 w-16 place-items-center rounded-full bg-neutral-100 dark:bg-neutral-900 text-neutral-400 dark:text-neutral-500 mx-auto">
-                  <svg
-                    className="h-8 w-8"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                </div>
-                <h1 className="mt-6 text-2xl font-black text-ink dark:text-neutral-100">
-                  No Contributor Profile
-                </h1>
-                <p className="mt-2 text-sm text-[#777] dark:text-neutral-400">
-                  @{handle} has not created a profile or made any contributions
-                  yet.
-                </p>
-              </div>
+              <EmptyState
+                title="No public contributor profile"
+                description={`@${handle} does not have a public demo profile.`}
+                action={
+                  <Link href="/contests" className="button-secondary">
+                    Explore contests
+                  </Link>
+                }
+              />
             )}
           </div>
         </section>

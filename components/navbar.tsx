@@ -8,34 +8,17 @@ import { AnimatedBackground } from '@/components/core/animated-background';
 import { Logo } from './logo';
 
 const navLinks = [
-  { href: '/contests/opencode-summer-2026/projects', label: 'Projects' },
-  { href: '/contests/opencode-summer-2026/leaderboard', label: 'Leaderboard' },
+  { href: '/contests', label: 'Contests' },
+  {
+    href: '/contests/community-build-week/projects',
+    label: 'Projects',
+  },
+  {
+    href: '/contests/community-build-week/leaderboard',
+    label: 'Leaderboard',
+  },
   { href: '/events', label: 'Events' },
   { href: '/discussion', label: 'Discussion' },
-];
-
-const mockNotifications = [
-  {
-    id: '1',
-    title: 'PR #284 merged',
-    desc: 'Sofia Chen merged your contribution to elixpo/opensource.',
-    time: '2m ago',
-    type: 'PR',
-  },
-  {
-    id: '2',
-    title: 'Points Awarded',
-    desc: 'You received +200 points for verifying bug claims in elixpo/cli.',
-    time: '18m ago',
-    type: 'Points',
-  },
-  {
-    id: '3',
-    title: 'New Contest Draft',
-    desc: 'Winter Maintainers Sprint was configured by project admin.',
-    time: '34m ago',
-    type: 'System',
-  },
 ];
 
 export function Navbar() {
@@ -243,28 +226,8 @@ export function Navbar() {
                         Notifications
                       </h3>
                     </div>
-                    <div className="flex flex-col max-h-80 overflow-y-auto divide-y divide-[var(--line)] dark:divide-neutral-800">
-                      {mockNotifications.map((n) => (
-                        <div
-                          key={n.id}
-                          className="p-4 text-left hover:bg-[#fafafa] dark:hover:bg-neutral-900 transition"
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="font-mono text-[9px] font-bold text-accent uppercase bg-accent-soft dark:bg-accent/10 px-1.5 py-0.5 rounded">
-                              {n.type}
-                            </span>
-                            <span className="text-[10px] text-[#999] dark:text-neutral-400">
-                              {n.time}
-                            </span>
-                          </div>
-                          <h4 className="mt-1.5 text-xs font-bold text-ink dark:text-neutral-200">
-                            {n.title}
-                          </h4>
-                          <p className="mt-0.5 text-[11px] text-[#666] dark:text-neutral-400 leading-normal">
-                            {n.desc}
-                          </p>
-                        </div>
-                      ))}
+                    <div className="p-6 text-center text-xs text-[#666] dark:text-neutral-400">
+                      No new notifications.
                     </div>
                     <Link
                       href="/notifications"
