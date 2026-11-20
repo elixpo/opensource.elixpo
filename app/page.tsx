@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { DashboardPreview } from '@/components/dashboard-preview';
 import { Footer } from '@/components/footer';
@@ -12,6 +13,14 @@ import {
 } from '@/components/icons';
 import { Navbar } from '@/components/navbar';
 import { trendingEvents } from '@/lib/data/events';
+import { createPublicMetadata } from '@/lib/metadata';
+
+export const metadata: Metadata = createPublicMetadata({
+  title: 'Open Source Programs and Contests',
+  description:
+    'Discover public open-source contests, projects, and contributor communities with Elixpo.',
+  path: '/',
+});
 
 const features = [
   {
@@ -87,7 +96,7 @@ export default function Home() {
             <Link href="/host/contests/new" className="button-primary">
               Create a contest <Arrow />
             </Link>
-            <Link href="/host#contests" className="button-secondary">
+            <Link href="/contests" className="button-secondary">
               View contests
             </Link>
           </div>

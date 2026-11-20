@@ -13,40 +13,7 @@ interface NotificationItem {
   read: boolean;
 }
 
-const initialNotifications: NotificationItem[] = [
-  {
-    id: '1',
-    title: 'PR #284 merged',
-    desc: 'Sofia Chen merged your contribution: "Configure Turbopack configurations for OpenNext build scripts" to elixpo/opensource.',
-    time: '2 minutes ago',
-    type: 'PR',
-    read: false,
-  },
-  {
-    id: '2',
-    title: 'Points Awarded',
-    desc: 'You received +200 points for verifying bug claims in elixpo/cli issue tracker.',
-    time: '18 minutes ago',
-    type: 'Points',
-    read: false,
-  },
-  {
-    id: '3',
-    title: 'New Contest Draft',
-    desc: 'Winter Maintainers Sprint was successfully configured by workspace project admin.',
-    time: '34 minutes ago',
-    type: 'System',
-    read: true,
-  },
-  {
-    id: '4',
-    title: 'Mentor Assigned',
-    desc: 'Kenji Sato has been assigned as your technical mentor for the OpenCode Summer 2026 contest.',
-    time: '1 day ago',
-    type: 'Mentorship',
-    read: true,
-  },
-];
+const initialNotifications: NotificationItem[] = [];
 
 export default function Notifications() {
   const [notifications, setNotifications] =
@@ -81,7 +48,11 @@ export default function Notifications() {
                 </h1>
               </div>
               <button
+                type="button"
                 onClick={markAllRead}
+                disabled={
+                  !notifications.some((notification) => !notification.read)
+                }
                 className="button-secondary text-xs !py-2 self-start sm:self-auto"
               >
                 Mark all as read

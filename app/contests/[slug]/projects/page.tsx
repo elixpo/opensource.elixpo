@@ -1,48 +1,72 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { Footer } from '@/components/footer';
 import { GitBranch } from '@/components/icons';
 import { Navbar } from '@/components/navbar';
+import { PaginationLinks } from '@/components/public/PaginationLinks';
+import { EmptyState } from '@/components/states/EmptyState';
+import { createPublicMetadata } from '@/lib/metadata';
+import {
+  getPublicContest,
+  getPublicProjects,
+  PUBLIC_DEMO_NOTICE,
+} from '@/lib/public-data';
 
-const projects = [
-  {
-    name: 'elixpo/opensource',
-    desc: 'The core platform for running open-source competitions, mentorship, and payouts. Built with Next.js & Cloudflare.',
-    stars: '1.2k',
-    issues: 8,
-    contributors: 14,
-    tags: ['Next.js', 'Cloudflare', 'TypeScript'],
-  },
-  {
-    name: 'elixpo/cli',
-    desc: 'Developer toolbelt to seed local environments, trigger worker simulations, and lint configurations.',
-    stars: '342',
-    issues: 3,
-    contributors: 5,
-    tags: ['Rust', 'CLI', 'WebAssembly'],
-  },
-  {
-    name: 'elixpo/design-system',
-    desc: 'Premium React components, themes, and animations powered by vanilla CSS custom properties.',
-    stars: '528',
-    issues: 12,
-    contributors: 9,
-    tags: ['React', 'CSS', 'Aesthetics'],
-  },
-  {
-    name: 'elixpo/governance',
-    desc: 'Smart contracts and schemas for append-only audit ledgers and automated contributor rewards.',
-    stars: '189',
-    issues: 2,
-    contributors: 4,
-    tags: ['Solidity', 'D1', 'SQLite'],
-  },
-];
+type ProjectsPageProps = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string | string[] }>;
+};
+
+const pageSize = 2;
+
+export async function generateMetadata({
+  params,
+}: ProjectsPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const contest = getPublicContest(slug);
+
+  if (!contest) {
+    return createPublicMetadata({
+      title: 'Public contest projects',
+      description: 'Browse projects participating in a public contest.',
+      path: `/contests/${encodeURIComponent(slug)}/projects`,
+      noIndex: true,
+    });
+  }
+
+  return createPublicMetadata({
+    title: `Projects — ${contest.name}`,
+    description: `Explore public projects participating in ${contest.name}.`,
+    path: `/contests/${contest.slug}/projects`,
+  });
+}
 
 export default async function Projects({
   params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
+  searchParams,
+}: ProjectsPageProps) {
+  const [{ slug }, { page: rawPage }] = await Promise.all([
+    params,
+    searchParams,
+  ]);
+  const contest = getPublicContest(slug);
+
+  if (!contest) {
+    notFound();
+  }
+
+  const projects = getPublicProjects(contest.slug);
+  const pageValue = Array.isArray(rawPage) ? rawPage[0] : rawPage;
+  const requestedPage = Number.parseInt(pageValue ?? '1', 10);
+  const totalPages = Math.ceil(projects.length / pageSize);
+  const currentPage = Number.isFinite(requestedPage)
+    ? Math.min(Math.max(requestedPage, 1), Math.max(totalPages, 1))
+    : 1;
+  const visibleProjects = projects.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
 
   return (
     <main className="min-h-screen flex flex-col justify-between">
@@ -51,61 +75,83 @@ export default async function Projects({
         <section className="relative overflow-hidden py-16 md:py-24">
           <div className="hero-grid absolute inset-0 -z-10" />
           <div className="shell">
-            <p className="eyebrow">Contest: {slug}</p>
-            <h1 className="mt-4 text-4xl font-black tracking-[-.04em] md:text-6xl max-w-2xl">
+            <Link
+              href={`/contests/${contest.slug}`}
+              className="text-sm font-semibold text-accent hover:underline"
+            >
+              ← {contest.name}
+            </Link>
+            <p className="eyebrow mt-8">Public contest projects</p>
+            <h1 className="mt-4 max-w-3xl text-4xl font-black tracking-[-.04em] md:text-6xl">
               Discover and contribute.
             </h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-[#666] dark:text-neutral-400">
-              Explore active repositories within the Elixpo ecosystem for the{' '}
-              {slug} contest. Claim open issues, submit pull requests, and build
-              your open-source profile.
+            <p className="mt-5 max-w-2xl text-base leading-7 text-[#666] dark:text-neutral-400">
+              Browse the public demo repositories listed for {contest.name}.
+            </p>
+            <p className="mt-4 text-xs text-[#777] dark:text-neutral-500">
+              {PUBLIC_DEMO_NOTICE}
             </p>
 
-            <div className="mt-12 grid gap-6 md:grid-cols-2">
-              {projects.map((project) => (
-                <div
-                  key={project.name}
-                  className="surface p-6 flex flex-col justify-between hover:border-[#bbb] dark:hover:border-neutral-700 transition group"
-                >
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-2 font-mono text-sm font-bold text-ink dark:text-neutral-100">
-                        <GitBranch /> {project.name}
-                      </span>
-                      <span className="flex items-center gap-1 rounded bg-[#f6f6f6] dark:bg-neutral-800 px-2 py-1 text-xs text-[#555] dark:text-neutral-300">
-                        ★ {project.stars}
-                      </span>
-                    </div>
-                    <h3 className="mt-4 text-lg font-bold text-ink dark:text-neutral-100 group-hover:text-accent transition">
-                      {project.name.split('/')[1]}
-                    </h3>
-                    <p className="mt-2 text-sm leading-6 text-[#666] dark:text-neutral-400">
-                      {project.desc}
-                    </p>
-                  </div>
-                  <div className="mt-6 border-t border-[var(--line)] pt-4 flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex gap-4 text-xs font-mono text-[#777] dark:text-neutral-400">
-                      <span>
-                        <b>{project.issues}</b> Open Issues
-                      </span>
-                      <span>
-                        <b>{project.contributors}</b> Contributors
-                      </span>
-                    </div>
-                    <div className="flex gap-1.5">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full bg-accent-soft px-2.5 py-0.5 text-[10px] font-bold text-accent"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            {visibleProjects.length === 0 ? (
+              <div className="mt-10">
+                <EmptyState
+                  title="No public projects yet"
+                  description="Projects will appear here when they are published for this contest."
+                  action={
+                    <Link href="/contests" className="button-secondary">
+                      Browse contests
+                    </Link>
+                  }
+                />
+              </div>
+            ) : (
+              <ul
+                aria-label={`Public projects in ${contest.name}`}
+                className="mt-10 grid list-none gap-5 p-0 md:grid-cols-2"
+              >
+                {visibleProjects.map((project) => (
+                  <li key={`${project.owner}/${project.repo}`}>
+                    <article className="surface flex h-full flex-col p-6">
+                      <div className="flex items-center gap-2 font-mono text-sm font-bold text-ink dark:text-neutral-100">
+                        <GitBranch />
+                        {project.owner}/{project.repo}
+                      </div>
+                      <h2 className="mt-4 text-xl font-extrabold text-ink dark:text-neutral-100">
+                        {project.repo}
+                      </h2>
+                      <p className="mt-3 flex-1 text-sm leading-6 text-[#666] dark:text-neutral-400">
+                        {project.summary}
+                      </p>
+                      <ul
+                        aria-label="Technologies"
+                        className="mt-5 flex list-none flex-wrap gap-2 p-0"
+                      >
+                        {project.technologies.map((technology) => (
+                          <li
+                            key={technology}
+                            className="rounded-full bg-accent-soft px-3 py-1 text-[10px] font-bold text-accent"
+                          >
+                            {technology}
+                          </li>
+                        ))}
+                      </ul>
+                      <Link
+                        href={`/contests/${contest.slug}/projects/${project.owner}/${project.repo}`}
+                        className="mt-6 self-start text-sm font-bold text-accent hover:underline"
+                      >
+                        Project details →
+                      </Link>
+                    </article>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <PaginationLinks
+              basePath={`/contests/${contest.slug}/projects`}
+              currentPage={currentPage}
+              totalPages={totalPages}
+            />
           </div>
         </section>
       </div>

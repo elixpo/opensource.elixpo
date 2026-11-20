@@ -64,7 +64,10 @@ leaderboards, and reward configuration.
 
 The platform is under active development. The current foundation includes:
 
-- A responsive public landing page and role-aware host panel.
+- Public contest, project, leaderboard, and contributor-profile routes backed
+  by an allowlisted demo dataset, plus a responsive landing page and role-aware
+  host panel. These discovery pages do not read private contest data or add
+  backend behavior.
 - Contest creation and workspace route foundations.
 - Cloudflare Workers deployment through the OpenNext adapter.
 - D1 schema and migrations for contests, memberships, repositories, activity, points, invitations, webhooks, and audits.

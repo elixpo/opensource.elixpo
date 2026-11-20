@@ -141,6 +141,18 @@ export function Footer() {
           <p>© {currentYear} Elixpo. Built in the open.</p>
           <div className="flex flex-wrap gap-x-6 gap-y-2">
             <Link
+              href="/privacy"
+              className="py-1 transition-colors hover:text-white"
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/terms"
+              className="py-1 transition-colors hover:text-white"
+            >
+              Terms
+            </Link>
+            <Link
               href="/code-of-conduct"
               className="py-1 transition-colors hover:text-white"
             >

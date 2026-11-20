@@ -24,6 +24,22 @@ export const metadata: Metadata = {
       'GitHub-native programs, contribution tracking, leaderboards, mentorship, and payouts.',
     type: 'website',
     siteName: 'Elixpo Open Source',
+    url: publicEnv.appUrl,
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Elixpo Open Source',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Elixpo Open Source — Run programs that ship',
+    description:
+      'GitHub-native programs, contribution tracking, leaderboards, mentorship, and payouts.',
+    images: ['/opengraph-image'],
   },
   robots: { index: true, follow: true },
 };
