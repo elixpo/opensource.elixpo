@@ -17,7 +17,7 @@
   <a href="https://opensource.elixpo.com"><img src="https://img.shields.io/badge/status-in%20development-e53935?style=flat-square" alt="In development" /></a>
   <img src="https://img.shields.io/badge/platform-Cloudflare%20Workers-f38020?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare Workers" />
   <img src="https://img.shields.io/badge/database-Cloudflare%20D1-f38020?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare D1" />
-  <img src="https://img.shields.io/badge/framework-Next.js%2015-000?style=flat-square&logo=next.js" alt="Next.js 15" />
+  <img src="https://img.shields.io/badge/framework-Next.js%2016-000?style=flat-square&logo=next.js" alt="Next.js 16" />
   <img src="https://img.shields.io/github/license/elixpo/opensource?style=flat-square&color=444" alt="License" />
   <img src="https://img.shields.io/github/stars/elixpo/opensource?style=flat-square&color=e53935" alt="Stars" />
 </p>
@@ -79,7 +79,7 @@ production workflows are being delivered incrementally. Follow the
 
 <!-- Commands match .github/workflows/biome.yml (./biome.sh ci), .github/workflows/tests.yml (npm test) and the Elixpo quality gate called from .github/workflows/elixpo-ci.yml (npm ci, then ci.test_cmd and ci.build_cmd from .elixpo/project.yml on Node 20). -->
 
-You need Node.js 20 (see [`.nvmrc`](.nvmrc)) and npm on Linux, macOS, or
+You need Node.js 20.9 or newer (see [`.nvmrc`](.nvmrc)) and npm on Linux, macOS, or
 Windows via WSL. No Elixpo keys, accounts, SOPS or `.env.local` are needed.
 
 ```bash
@@ -110,7 +110,7 @@ secret, open an issue.
 
 ## Running this project locally
 
-Requirements: Node.js 20 or newer and npm. No keys or SOPS are needed.
+Requirements: Node.js 20.9 or newer and npm. No keys or SOPS are needed.
 
 ```bash
 npm ci
