@@ -2,6 +2,7 @@ import type {
   Contest,
   ContestMembership,
   HostOrganization,
+  Notification,
   User,
 } from './schema';
 
@@ -55,5 +56,17 @@ export const createMockMembership = (
   role: 'contributor',
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
+  ...overrides,
+});
+
+export const createMockNotification = (
+  overrides?: Partial<Notification>,
+): Notification => ({
+  id: generateId('notif'),
+  title: 'PR #284 merged',
+  desc: 'Sofia Chen merged your contribution to elixpo/opensource.',
+  time: '2m ago',
+  type: 'PR',
+  read: false,
   ...overrides,
 });

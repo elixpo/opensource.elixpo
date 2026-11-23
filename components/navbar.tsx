@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatedBackground } from '@/components/core/animated-background';
+import { createMockNotification } from '@/lib/mocks/factories';
+import type { Notification } from '@/lib/mocks/schema';
 import { Logo } from './logo';
 
 const navLinks = [
@@ -14,28 +16,28 @@ const navLinks = [
   { href: '/discussion', label: 'Discussion' },
 ];
 
-const mockNotifications = [
-  {
+const mockNotifications: Notification[] = [
+  createMockNotification({
     id: '1',
     title: 'PR #284 merged',
     desc: 'Sofia Chen merged your contribution to elixpo/opensource.',
     time: '2m ago',
     type: 'PR',
-  },
-  {
+  }),
+  createMockNotification({
     id: '2',
     title: 'Points Awarded',
     desc: 'You received +200 points for verifying bug claims in elixpo/cli.',
     time: '18m ago',
     type: 'Points',
-  },
-  {
+  }),
+  createMockNotification({
     id: '3',
     title: 'New Contest Draft',
     desc: 'Winter Maintainers Sprint was configured by project admin.',
     time: '34m ago',
     type: 'System',
-  },
+  }),
 ];
 
 export function Navbar() {
