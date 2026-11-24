@@ -53,3 +53,14 @@ export interface ContestMembership {
   created_at: string;
   updated_at: string;
 }
+
+export type NotificationType = 'PR' | 'Points' | 'System' | 'Mentorship';
+
+export interface Notification {
+  id: string;
+  title: string;
+  desc: string;
+  time: string;
+  type: NotificationType;
+  read?: boolean;
+}
