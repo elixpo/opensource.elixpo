@@ -19,7 +19,7 @@ jobs:
   worker:
     uses: elixpo/agent.elixpo/.github/workflows/deploy-cloudflare-worker.yml@main
     with:
-      node-version: "20"
+      node-version: "22"
       pre-build-command: npm run typecheck
       build-command: npm run cf:build
       build-env: CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV=false
